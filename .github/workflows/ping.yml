@@ -1,0 +1,12 @@
+name: Keep Render Awake
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # Cada 10 minutos
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Curl al endpoint de Render
+        run: curl https://whatsappweb-pkva.onrender.com
