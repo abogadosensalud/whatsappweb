@@ -4,8 +4,17 @@ const qrcode = require('qrcode-terminal');
 const client = new Client({
   authStrategy: new LocalAuth(),
   puppeteer: {
-    args: ['--no-sandbox'],
     headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--no-first-run',
+      '--no-zygote',
+      '--single-process', // <- Este puede ayudar mucho en entornos con poca RAM
+      '--disable-gpu'
+    ],
   },
 });
 
@@ -23,5 +32,15 @@ client.on('message', (msg) => {
     msg.reply('¡Hola! Soy tu bot 🧠');
   }
 });
+
+// Manejo de errores para evitar que el proceso muera
+process.on('unhandledRejection', (err) => {
+  console.error('Unhandled Rejection:', err);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+});
+
 
 client.initialize();
